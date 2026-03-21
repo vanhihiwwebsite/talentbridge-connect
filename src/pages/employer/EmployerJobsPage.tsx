@@ -11,7 +11,18 @@ import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Briefcase, MapPin, Users } from "lucide-react";
+import { motion } from "framer-motion";
+import PageTransition from "@/components/PageTransition";
+import SkeletonCard from "@/components/SkeletonCard";
+import EmptyState from "@/components/EmptyState";
+
+const statusStyles: Record<string, string> = {
+  APPROVED: "bg-success/10 text-success border-success/20",
+  PENDING: "bg-warning/10 text-warning border-warning/20",
+  REJECTED: "bg-destructive/10 text-destructive border-destructive/20",
+  CLOSED: "bg-muted text-muted-foreground border-border",
+};
 
 const EmployerJobsPage = () => {
   const queryClient = useQueryClient();
@@ -43,89 +54,113 @@ const EmployerJobsPage = () => {
     onSuccess: () => { toast.success("Job closed"); queryClient.invalidateQueries({ queryKey: ["my-jobs"] }); },
   });
 
-  const statusColor: Record<string, string> = {
-    APPROVED: "bg-green-100 text-green-800", PENDING: "bg-yellow-100 text-yellow-800",
-    REJECTED: "bg-red-100 text-red-800", CLOSED: "bg-gray-100 text-gray-800",
-  };
-
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-foreground">My Job Posts</h1>
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild><Button><Plus className="w-4 h-4 mr-1" />Post Job</Button></DialogTrigger>
-          <DialogContent className="max-w-lg max-h-[80vh] overflow-y-auto">
-            <DialogHeader><DialogTitle>Create Job Post</DialogTitle></DialogHeader>
-            <form onSubmit={e => { e.preventDefault(); createJob.mutate(form); }} className="space-y-3">
-              <div><Label>Title</Label><Input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} required /></div>
-              <div><Label>Description</Label><Textarea value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} required /></div>
-              <div className="grid grid-cols-2 gap-2">
-                <div><Label>Min Salary</Label><Input type="number" value={form.salaryMin} onChange={e => setForm(f => ({ ...f, salaryMin: Number(e.target.value) }))} /></div>
-                <div><Label>Max Salary</Label><Input type="number" value={form.salaryMax} onChange={e => setForm(f => ({ ...f, salaryMax: Number(e.target.value) }))} /></div>
-              </div>
-              <div><Label>Location</Label><Input value={form.location} onChange={e => setForm(f => ({ ...f, location: e.target.value }))} required /></div>
-              <div className="grid grid-cols-2 gap-2">
-                <div><Label>Job Type</Label>
-                  <Select value={form.jobType} onValueChange={v => setForm(f => ({ ...f, jobType: v }))}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
+    <PageTransition>
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">My Job Posts</h1>
+            <p className="text-sm text-muted-foreground mt-0.5">Manage your open positions</p>
+          </div>
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+              <Button className="shadow-soft font-medium"><Plus className="w-4 h-4 mr-1.5" />Post Job</Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-lg max-h-[80vh] overflow-y-auto">
+              <DialogHeader><DialogTitle>Create Job Post</DialogTitle></DialogHeader>
+              <form onSubmit={e => { e.preventDefault(); createJob.mutate(form); }} className="space-y-4">
+                <div className="space-y-2"><Label>Title</Label><Input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} required /></div>
+                <div className="space-y-2"><Label>Description</Label><Textarea value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} required /></div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-2"><Label>Min Salary</Label><Input type="number" value={form.salaryMin} onChange={e => setForm(f => ({ ...f, salaryMin: Number(e.target.value) }))} /></div>
+                  <div className="space-y-2"><Label>Max Salary</Label><Input type="number" value={form.salaryMax} onChange={e => setForm(f => ({ ...f, salaryMax: Number(e.target.value) }))} /></div>
+                </div>
+                <div className="space-y-2"><Label>Location</Label><Input value={form.location} onChange={e => setForm(f => ({ ...f, location: e.target.value }))} required /></div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-2"><Label>Job Type</Label>
+                    <Select value={form.jobType} onValueChange={v => setForm(f => ({ ...f, jobType: v }))}>
+                      <SelectTrigger><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="FULL_TIME">Full Time</SelectItem>
+                        <SelectItem value="PART_TIME">Part Time</SelectItem>
+                        <SelectItem value="CONTRACT">Contract</SelectItem>
+                        <SelectItem value="INTERNSHIP">Internship</SelectItem>
+                        <SelectItem value="REMOTE">Remote</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2"><Label>Experience</Label>
+                    <Select value={form.experienceLevel} onValueChange={v => setForm(f => ({ ...f, experienceLevel: v }))}>
+                      <SelectTrigger><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="ENTRY">Entry</SelectItem>
+                        <SelectItem value="JUNIOR">Junior</SelectItem>
+                        <SelectItem value="MID">Mid</SelectItem>
+                        <SelectItem value="SENIOR">Senior</SelectItem>
+                        <SelectItem value="LEAD">Lead</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <div className="space-y-2"><Label>Category</Label>
+                  <Select value={String(form.categoryId)} onValueChange={v => setForm(f => ({ ...f, categoryId: Number(v) }))}>
+                    <SelectTrigger><SelectValue placeholder="Select category" /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="FULL_TIME">Full Time</SelectItem>
-                      <SelectItem value="PART_TIME">Part Time</SelectItem>
-                      <SelectItem value="CONTRACT">Contract</SelectItem>
-                      <SelectItem value="INTERNSHIP">Internship</SelectItem>
-                      <SelectItem value="REMOTE">Remote</SelectItem>
+                      {categories?.map(c => <SelectItem key={c.id} value={String(c.id)}>{c.name}</SelectItem>)}
                     </SelectContent>
                   </Select>
                 </div>
-                <div><Label>Experience</Label>
-                  <Select value={form.experienceLevel} onValueChange={v => setForm(f => ({ ...f, experienceLevel: v }))}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="ENTRY">Entry</SelectItem>
-                      <SelectItem value="JUNIOR">Junior</SelectItem>
-                      <SelectItem value="MID">Mid</SelectItem>
-                      <SelectItem value="SENIOR">Senior</SelectItem>
-                      <SelectItem value="LEAD">Lead</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              <div><Label>Category</Label>
-                <Select value={String(form.categoryId)} onValueChange={v => setForm(f => ({ ...f, categoryId: Number(v) }))}>
-                  <SelectTrigger><SelectValue placeholder="Select category" /></SelectTrigger>
-                  <SelectContent>
-                    {categories?.map(c => <SelectItem key={c.id} value={String(c.id)}>{c.name}</SelectItem>)}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div><Label>Expiry Date</Label><Input type="date" value={form.expiredAt} onChange={e => setForm(f => ({ ...f, expiredAt: e.target.value }))} required /></div>
-              <Button type="submit" disabled={createJob.isPending} className="w-full">
-                {createJob.isPending ? "Posting..." : "Post Job"}
-              </Button>
-            </form>
-          </DialogContent>
-        </Dialog>
+                <div className="space-y-2"><Label>Expiry Date</Label><Input type="date" value={form.expiredAt} onChange={e => setForm(f => ({ ...f, expiredAt: e.target.value }))} required /></div>
+                <Button type="submit" disabled={createJob.isPending} className="w-full font-medium shadow-soft">
+                  {createJob.isPending ? "Posting..." : "Post Job"}
+                </Button>
+              </form>
+            </DialogContent>
+          </Dialog>
+        </div>
+
+        {isLoading && <div className="space-y-4">{Array.from({ length: 3 }).map((_, i) => <SkeletonCard key={i} />)}</div>}
+
+        {!isLoading && (!jobs || jobs.length === 0) && (
+          <EmptyState icon={<Briefcase className="w-8 h-8 text-primary" />} title="No job posts yet" description="Create your first job post to start receiving applications." />
+        )}
+
+        <div className="space-y-3">
+          {jobs?.map((job, i) => (
+            <motion.div key={job.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: i * 0.04 }}>
+              <Card className="hover:shadow-soft transition-shadow duration-200">
+                <CardHeader className="pb-2">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle className="text-base font-semibold">{job.title}</CardTitle>
+                      <div className="flex items-center gap-3 text-sm text-muted-foreground mt-1">
+                        <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5" />{job.location}</span>
+                        <span>{job.jobType}</span>
+                        <span>{job.experienceLevel}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Badge variant="outline" className={statusStyles[job.status] || ""}>{job.status}</Badge>
+                      <Badge variant="secondary" className="gap-1"><Users className="w-3 h-3" />{job.applicationCount}</Badge>
+                      <Button size="sm" variant="ghost" onClick={() => deleteJob.mutate(job.id)} className="text-muted-foreground hover:text-destructive">
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </CardHeader>
+                {job.rejectionReason && (
+                  <CardContent className="pt-0">
+                    <div className="p-2 rounded-lg bg-destructive/5 border border-destructive/10">
+                      <p className="text-sm text-destructive">Rejected: {job.rejectionReason}</p>
+                    </div>
+                  </CardContent>
+                )}
+              </Card>
+            </motion.div>
+          ))}
+        </div>
       </div>
-      {isLoading && <p className="text-muted-foreground">Loading...</p>}
-      {jobs?.map(job => (
-        <Card key={job.id}>
-          <CardHeader className="pb-2">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-base">{job.title}</CardTitle>
-              <div className="flex items-center gap-2">
-                <Badge className={statusColor[job.status] || ""}>{job.status}</Badge>
-                <Badge variant="outline">{job.applicationCount} applications</Badge>
-                <Button size="sm" variant="ghost" onClick={() => deleteJob.mutate(job.id)}><Trash2 className="w-4 h-4" /></Button>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground">{job.location} · {job.jobType} · {job.experienceLevel}</p>
-            {job.rejectionReason && <p className="text-sm text-destructive mt-1">Rejected: {job.rejectionReason}</p>}
-          </CardContent>
-        </Card>
-      ))}
-    </div>
+    </PageTransition>
   );
 };
 

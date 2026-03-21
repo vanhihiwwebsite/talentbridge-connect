@@ -10,7 +10,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Trash2, Plus } from "lucide-react";
+import { Trash2, Plus, User, Briefcase, GraduationCap, Sparkles } from "lucide-react";
+import PageTransition from "@/components/PageTransition";
 
 const CandidateProfilePage = () => {
   const queryClient = useQueryClient();
@@ -35,49 +36,61 @@ const CandidateProfilePage = () => {
     onError: (err: any) => toast.error(err?.response?.data?.message || "Error"),
   });
 
-  if (isLoading) return <p className="text-muted-foreground">Loading...</p>;
-  if (!profile) return <p className="text-muted-foreground">Profile not found. Please create your profile.</p>;
+  if (isLoading) return <div className="flex items-center justify-center py-20 text-muted-foreground">Loading profile...</div>;
+  if (!profile) return <div className="flex items-center justify-center py-20 text-muted-foreground">Profile not found. Please create your profile.</div>;
 
   return (
-    <div className="space-y-6 max-w-2xl">
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle>Profile</CardTitle>
-            <Button variant="outline" size="sm" onClick={() => {
-              setForm({ fullName: profile.fullName || "", phone: profile.phone || "", address: profile.address || "", summary: profile.summary || "" });
-              setEditProfile(true);
-            }}>Edit</Button>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          {editProfile ? (
-            <form onSubmit={e => { e.preventDefault(); updateProfile.mutate(); }} className="space-y-3">
-              <div><Label>Full Name</Label><Input value={form.fullName} onChange={e => setForm(f => ({ ...f, fullName: e.target.value }))} /></div>
-              <div><Label>Phone</Label><Input value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} /></div>
-              <div><Label>Address</Label><Input value={form.address} onChange={e => setForm(f => ({ ...f, address: e.target.value }))} /></div>
-              <div><Label>Summary</Label><Textarea value={form.summary} onChange={e => setForm(f => ({ ...f, summary: e.target.value }))} /></div>
-              <div className="flex gap-2">
-                <Button type="submit" disabled={updateProfile.isPending}>Save</Button>
-                <Button type="button" variant="outline" onClick={() => setEditProfile(false)}>Cancel</Button>
-              </div>
-            </form>
-          ) : (
-            <>
-              <p><strong>Name:</strong> {profile.fullName}</p>
-              <p><strong>Email:</strong> {profile.email}</p>
-              <p><strong>Phone:</strong> {profile.phone || "—"}</p>
-              <p><strong>Address:</strong> {profile.address || "—"}</p>
-              <p><strong>Summary:</strong> {profile.summary || "—"}</p>
-            </>
-          )}
-        </CardContent>
-      </Card>
+    <PageTransition>
+      <div className="space-y-6 max-w-2xl">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">My Profile</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">Manage your professional information</p>
+        </div>
 
-      <SkillsSection skills={profile.skills} />
-      <ExperienceSection experiences={profile.workExperiences} />
-      <EducationSection educations={profile.educations} />
-    </div>
+        <Card className="shadow-soft">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <User className="w-5 h-5 text-primary" />
+                </div>
+                <CardTitle className="text-lg">Personal Info</CardTitle>
+              </div>
+              <Button variant="outline" size="sm" onClick={() => {
+                setForm({ fullName: profile.fullName || "", phone: profile.phone || "", address: profile.address || "", summary: profile.summary || "" });
+                setEditProfile(true);
+              }}>Edit</Button>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {editProfile ? (
+              <form onSubmit={e => { e.preventDefault(); updateProfile.mutate(); }} className="space-y-4">
+                <div className="space-y-2"><Label>Full Name</Label><Input value={form.fullName} onChange={e => setForm(f => ({ ...f, fullName: e.target.value }))} /></div>
+                <div className="space-y-2"><Label>Phone</Label><Input value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} /></div>
+                <div className="space-y-2"><Label>Address</Label><Input value={form.address} onChange={e => setForm(f => ({ ...f, address: e.target.value }))} /></div>
+                <div className="space-y-2"><Label>Summary</Label><Textarea value={form.summary} onChange={e => setForm(f => ({ ...f, summary: e.target.value }))} /></div>
+                <div className="flex gap-2">
+                  <Button type="submit" disabled={updateProfile.isPending} className="shadow-soft">Save</Button>
+                  <Button type="button" variant="outline" onClick={() => setEditProfile(false)}>Cancel</Button>
+                </div>
+              </form>
+            ) : (
+              <div className="grid gap-2 text-sm">
+                <div className="flex justify-between py-1.5 border-b border-border/50"><span className="text-muted-foreground">Name</span><span className="font-medium">{profile.fullName}</span></div>
+                <div className="flex justify-between py-1.5 border-b border-border/50"><span className="text-muted-foreground">Email</span><span className="font-medium">{profile.email}</span></div>
+                <div className="flex justify-between py-1.5 border-b border-border/50"><span className="text-muted-foreground">Phone</span><span className="font-medium">{profile.phone || "—"}</span></div>
+                <div className="flex justify-between py-1.5 border-b border-border/50"><span className="text-muted-foreground">Address</span><span className="font-medium">{profile.address || "—"}</span></div>
+                <div className="pt-1.5"><span className="text-muted-foreground text-xs uppercase tracking-wide font-semibold">Summary</span><p className="mt-1 text-foreground leading-relaxed">{profile.summary || "—"}</p></div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        <SkillsSection skills={profile.skills} />
+        <ExperienceSection experiences={profile.workExperiences} />
+        <EducationSection educations={profile.educations} />
+      </div>
+    </PageTransition>
   );
 };
 
@@ -99,25 +112,42 @@ const SkillsSection = ({ skills }: { skills: any[] }) => {
   });
 
   return (
-    <Card>
-      <CardHeader><CardTitle className="text-base">Skills</CardTitle></CardHeader>
-      <CardContent className="space-y-3">
+    <Card className="shadow-soft">
+      <CardHeader>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-lg bg-accent flex items-center justify-center">
+            <Sparkles className="w-5 h-5 text-primary" />
+          </div>
+          <CardTitle className="text-lg">Skills</CardTitle>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-4">
         <div className="flex flex-wrap gap-2">
           {skills?.map(s => (
-            <Badge key={s.skillName} variant="secondary" className="gap-1">
-              {s.displayName || s.skillName} ({s.level})
-              <button onClick={() => deleteSkill.mutate(s.skillName)}><Trash2 className="w-3 h-3" /></button>
+            <Badge key={s.skillName} variant="secondary" className="gap-1.5 py-1.5 px-3">
+              {s.displayName || s.skillName}
+              <span className="text-xs text-muted-foreground">· {s.level}</span>
+              <button onClick={() => deleteSkill.mutate(s.skillName)} className="ml-1 hover:text-destructive transition-colors">
+                <Trash2 className="w-3 h-3" />
+              </button>
             </Badge>
           ))}
+          {(!skills || skills.length === 0) && <p className="text-sm text-muted-foreground">No skills added yet.</p>}
         </div>
         <div className="flex gap-2 items-end">
-          <div className="flex-1"><Label>Skill Name</Label><Input value={skillName} onChange={e => setSkillName(e.target.value)} placeholder="e.g. React" /></div>
-          <div><Label>Level</Label>
-            <select className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" value={level} onChange={e => setLevel(e.target.value)}>
+          <div className="flex-1 space-y-2">
+            <Label>Skill Name</Label>
+            <Input value={skillName} onChange={e => setSkillName(e.target.value)} placeholder="e.g. React" />
+          </div>
+          <div className="space-y-2">
+            <Label>Level</Label>
+            <select className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2" value={level} onChange={e => setLevel(e.target.value)}>
               <option value="BEGINNER">Beginner</option><option value="INTERMEDIATE">Intermediate</option><option value="ADVANCED">Advanced</option><option value="EXPERT">Expert</option>
             </select>
           </div>
-          <Button onClick={() => addSkill.mutate({ skillName, level })} disabled={!skillName}><Plus className="w-4 h-4" /></Button>
+          <Button onClick={() => addSkill.mutate({ skillName, level })} disabled={!skillName} className="shadow-soft">
+            <Plus className="w-4 h-4" />
+          </Button>
         </div>
       </CardContent>
     </Card>
@@ -141,27 +171,32 @@ const ExperienceSection = ({ experiences }: { experiences: any[] }) => {
   });
 
   return (
-    <Card>
+    <Card className="shadow-soft">
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base">Work Experience</CardTitle>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-accent flex items-center justify-center">
+              <Briefcase className="w-5 h-5 text-primary" />
+            </div>
+            <CardTitle className="text-lg">Work Experience</CardTitle>
+          </div>
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild><Button size="sm" variant="outline"><Plus className="w-4 h-4 mr-1" />Add</Button></DialogTrigger>
             <DialogContent>
               <DialogHeader><DialogTitle>Add Experience</DialogTitle></DialogHeader>
-              <form onSubmit={e => { e.preventDefault(); addExp.mutate(form); }} className="space-y-3">
-                <div><Label>Company</Label><Input value={form.company} onChange={e => setForm(f => ({ ...f, company: e.target.value }))} required /></div>
-                <div><Label>Position</Label><Input value={form.position} onChange={e => setForm(f => ({ ...f, position: e.target.value }))} required /></div>
-                <div className="grid grid-cols-2 gap-2">
-                  <div><Label>Start Date</Label><Input type="date" value={form.startDate} onChange={e => setForm(f => ({ ...f, startDate: e.target.value }))} required /></div>
-                  <div><Label>End Date</Label><Input type="date" value={form.endDate} onChange={e => setForm(f => ({ ...f, endDate: e.target.value }))} disabled={form.currentlyWorking} /></div>
+              <form onSubmit={e => { e.preventDefault(); addExp.mutate(form); }} className="space-y-4">
+                <div className="space-y-2"><Label>Company</Label><Input value={form.company} onChange={e => setForm(f => ({ ...f, company: e.target.value }))} required /></div>
+                <div className="space-y-2"><Label>Position</Label><Input value={form.position} onChange={e => setForm(f => ({ ...f, position: e.target.value }))} required /></div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-2"><Label>Start Date</Label><Input type="date" value={form.startDate} onChange={e => setForm(f => ({ ...f, startDate: e.target.value }))} required /></div>
+                  <div className="space-y-2"><Label>End Date</Label><Input type="date" value={form.endDate} onChange={e => setForm(f => ({ ...f, endDate: e.target.value }))} disabled={form.currentlyWorking} /></div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <input type="checkbox" checked={form.currentlyWorking} onChange={e => setForm(f => ({ ...f, currentlyWorking: e.target.checked }))} />
+                  <input type="checkbox" checked={form.currentlyWorking} onChange={e => setForm(f => ({ ...f, currentlyWorking: e.target.checked }))} className="rounded" />
                   <Label>Currently working here</Label>
                 </div>
-                <div><Label>Description</Label><Textarea value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} /></div>
-                <Button type="submit" disabled={addExp.isPending}>Save</Button>
+                <div className="space-y-2"><Label>Description</Label><Textarea value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} /></div>
+                <Button type="submit" disabled={addExp.isPending} className="w-full shadow-soft">Save</Button>
               </form>
             </DialogContent>
           </Dialog>
@@ -169,15 +204,17 @@ const ExperienceSection = ({ experiences }: { experiences: any[] }) => {
       </CardHeader>
       <CardContent className="space-y-3">
         {experiences?.map(exp => (
-          <div key={exp.id} className="border border-border rounded p-3">
+          <div key={exp.id} className="border border-border/60 rounded-lg p-4 hover:shadow-soft transition-shadow duration-200">
             <div className="flex justify-between">
               <div>
-                <p className="font-medium">{exp.position} at {exp.company}</p>
-                <p className="text-sm text-muted-foreground">{exp.startDate} – {exp.currentlyWorking ? "Present" : exp.endDate}</p>
+                <p className="font-semibold text-foreground">{exp.position}</p>
+                <p className="text-sm text-muted-foreground">{exp.company} · {exp.startDate} – {exp.currentlyWorking ? "Present" : exp.endDate}</p>
               </div>
-              <Button size="sm" variant="ghost" onClick={() => deleteExp.mutate(exp.id)}><Trash2 className="w-4 h-4" /></Button>
+              <Button size="sm" variant="ghost" onClick={() => deleteExp.mutate(exp.id)} className="text-muted-foreground hover:text-destructive">
+                <Trash2 className="w-4 h-4" />
+              </Button>
             </div>
-            {exp.description && <p className="text-sm mt-1">{exp.description}</p>}
+            {exp.description && <p className="text-sm mt-2 text-muted-foreground leading-relaxed">{exp.description}</p>}
           </div>
         ))}
         {(!experiences || experiences.length === 0) && <p className="text-sm text-muted-foreground">No experience added.</p>}
@@ -203,24 +240,29 @@ const EducationSection = ({ educations }: { educations: any[] }) => {
   });
 
   return (
-    <Card>
+    <Card className="shadow-soft">
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base">Education</CardTitle>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-accent flex items-center justify-center">
+              <GraduationCap className="w-5 h-5 text-primary" />
+            </div>
+            <CardTitle className="text-lg">Education</CardTitle>
+          </div>
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild><Button size="sm" variant="outline"><Plus className="w-4 h-4 mr-1" />Add</Button></DialogTrigger>
             <DialogContent>
               <DialogHeader><DialogTitle>Add Education</DialogTitle></DialogHeader>
-              <form onSubmit={e => { e.preventDefault(); addEdu.mutate(form); }} className="space-y-3">
-                <div><Label>School</Label><Input value={form.school} onChange={e => setForm(f => ({ ...f, school: e.target.value }))} required /></div>
-                <div><Label>Major</Label><Input value={form.major} onChange={e => setForm(f => ({ ...f, major: e.target.value }))} required /></div>
-                <div><Label>Degree</Label><Input value={form.degree} onChange={e => setForm(f => ({ ...f, degree: e.target.value }))} required /></div>
-                <div className="grid grid-cols-2 gap-2">
-                  <div><Label>Start Date</Label><Input type="date" value={form.startDate} onChange={e => setForm(f => ({ ...f, startDate: e.target.value }))} required /></div>
-                  <div><Label>End Date</Label><Input type="date" value={form.endDate} onChange={e => setForm(f => ({ ...f, endDate: e.target.value }))} /></div>
+              <form onSubmit={e => { e.preventDefault(); addEdu.mutate(form); }} className="space-y-4">
+                <div className="space-y-2"><Label>School</Label><Input value={form.school} onChange={e => setForm(f => ({ ...f, school: e.target.value }))} required /></div>
+                <div className="space-y-2"><Label>Major</Label><Input value={form.major} onChange={e => setForm(f => ({ ...f, major: e.target.value }))} required /></div>
+                <div className="space-y-2"><Label>Degree</Label><Input value={form.degree} onChange={e => setForm(f => ({ ...f, degree: e.target.value }))} required /></div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-2"><Label>Start Date</Label><Input type="date" value={form.startDate} onChange={e => setForm(f => ({ ...f, startDate: e.target.value }))} required /></div>
+                  <div className="space-y-2"><Label>End Date</Label><Input type="date" value={form.endDate} onChange={e => setForm(f => ({ ...f, endDate: e.target.value }))} /></div>
                 </div>
-                <div><Label>Description</Label><Textarea value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} /></div>
-                <Button type="submit" disabled={addEdu.isPending}>Save</Button>
+                <div className="space-y-2"><Label>Description</Label><Textarea value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} /></div>
+                <Button type="submit" disabled={addEdu.isPending} className="w-full shadow-soft">Save</Button>
               </form>
             </DialogContent>
           </Dialog>
@@ -228,13 +270,15 @@ const EducationSection = ({ educations }: { educations: any[] }) => {
       </CardHeader>
       <CardContent className="space-y-3">
         {educations?.map(edu => (
-          <div key={edu.id} className="border border-border rounded p-3">
+          <div key={edu.id} className="border border-border/60 rounded-lg p-4 hover:shadow-soft transition-shadow duration-200">
             <div className="flex justify-between">
               <div>
-                <p className="font-medium">{edu.degree} in {edu.major}</p>
+                <p className="font-semibold text-foreground">{edu.degree} in {edu.major}</p>
                 <p className="text-sm text-muted-foreground">{edu.school} · {edu.startDate} – {edu.endDate || "Present"}</p>
               </div>
-              <Button size="sm" variant="ghost" onClick={() => deleteEdu.mutate(edu.id)}><Trash2 className="w-4 h-4" /></Button>
+              <Button size="sm" variant="ghost" onClick={() => deleteEdu.mutate(edu.id)} className="text-muted-foreground hover:text-destructive">
+                <Trash2 className="w-4 h-4" />
+              </Button>
             </div>
           </div>
         ))}
