@@ -1,16 +1,30 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useAuth } from "@/contexts/AuthContext";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
-// IMPORTANT: Fully REPLACE this with your own code
-const PlaceholderIndex = () => {
-  // PLACEHOLDER: Replace this entire return statement with the user's app.
-  // The inline background color is intentionally not part of the design system.
+const Index = () => {
+  const { isAuthenticated, role } = useAuth();
+
   return (
-    <div className="flex min-h-screen items-center justify-center" style={{ backgroundColor: '#fcfbf8' }}>
-      <img data-lovable-blank-page-placeholder="REMOVE_THIS" src="/placeholder.svg" alt="Your app will live here!" />
+    <div className="flex flex-col items-center justify-center min-h-[70vh] text-center space-y-6">
+      <h1 className="text-4xl font-bold text-foreground">TalentBridge</h1>
+      <p className="text-lg text-muted-foreground max-w-md">
+        Connect talent with opportunity. Find your next role or hire the best candidates.
+      </p>
+      {!isAuthenticated ? (
+        <div className="flex gap-3">
+          <Link to="/login"><Button size="lg">Login</Button></Link>
+          <Link to="/register"><Button size="lg" variant="outline">Register</Button></Link>
+        </div>
+      ) : (
+        <div className="flex gap-3">
+          {role === "CANDIDATE" && <Link to="/jobs"><Button size="lg">Browse Jobs</Button></Link>}
+          {role === "EMPLOYER" && <Link to="/employer/jobs"><Button size="lg">My Jobs</Button></Link>}
+          {role === "ADMIN" && <Link to="/admin/jobs"><Button size="lg">Admin Panel</Button></Link>}
+        </div>
+      )}
     </div>
   );
 };
-
-const Index = PlaceholderIndex;
 
 export default Index;
