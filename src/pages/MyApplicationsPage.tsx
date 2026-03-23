@@ -24,12 +24,20 @@ const MyApplicationsPage = () => {
   const queryClient = useQueryClient();
   const { data, isLoading } = useQuery({
     queryKey: ["my-applications"],
-    queryFn: () => api.get<ApiResponse<ApplicationResponse[]>>("/api/v1/applications/my-applications").then(r => r.data.data),
+    queryFn: () =>
+      api
+        .get<
+          ApiResponse<ApplicationResponse[]>
+        >("/api/v1/applications/my-applications")
+        .then((r) => r.data.data),
   });
 
   const withdrawMutation = useMutation({
     mutationFn: (id: number) => api.put(`/api/v1/applications/${id}/withdraw`),
-    onSuccess: () => { toast.success("Application withdrawn"); queryClient.invalidateQueries({ queryKey: ["my-applications"] }); },
+    onSuccess: () => {
+      toast.success("Application withdrawn");
+      queryClient.invalidateQueries({ queryKey: ["my-applications"] });
+    },
     onError: (err: any) => toast.error(err?.response?.data?.message || "Error"),
   });
 
@@ -37,12 +45,20 @@ const MyApplicationsPage = () => {
     <PageTransition>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">My Applications</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">Track the status of your job applications</p>
+          <h1 className="text-2xl font-bold text-foreground">
+            My Applications
+          </h1>
+          <p className="text-sm text-muted-foreground mt-0.5">
+            Track the status of your job applications
+          </p>
         </div>
 
         {isLoading && (
-          <div className="space-y-4">{Array.from({ length: 3 }).map((_, i) => <SkeletonCard key={i} />)}</div>
+          <div className="space-y-4">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <SkeletonCard key={i} />
+            ))}
+          </div>
         )}
 
         {!isLoading && (!data || data.length === 0) && (
@@ -64,32 +80,58 @@ const MyApplicationsPage = () => {
               <Card className="hover:shadow-soft transition-shadow duration-200">
                 <CardHeader className="pb-2">
                   <div className="flex items-center justify-between">
-                    <CardTitle className="text-base font-semibold">{app.jobTitle}</CardTitle>
-                    <Badge variant="outline" className={statusStyles[app.status] || ""}>{app.status}</Badge>
+                    <CardTitle className="text-base font-semibold">
+                      {app.jobTitle}
+                    </CardTitle>
+                    <Badge
+                      variant="outline"
+                      className={statusStyles[app.status] || ""}
+                    >
+                      {app.status}
+                    </Badge>
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    {app.companyName} · Applied {new Date(app.appliedAt).toLocaleDateString()}
+                    {app.companyName} · Applied{" "}
+                    {new Date(app.appliedAt).toISOString().split("T")[0]}
                   </p>
                 </CardHeader>
                 <CardContent>
-                  {app.coverLetter && <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{app.coverLetter}</p>}
+                  {app.coverLetter && (
+                    <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+                      {app.coverLetter}
+                    </p>
+                  )}
                   {app.status === "PENDING" && (
-                    <Button variant="outline" size="sm" onClick={() => withdrawMutation.mutate(app.id)}
-                      disabled={withdrawMutation.isPending} className="text-destructive hover:text-destructive">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => withdrawMutation.mutate(app.id)}
+                      disabled={withdrawMutation.isPending}
+                      className="text-destructive hover:text-destructive"
+                    >
                       Withdraw
                     </Button>
                   )}
                   {app.histories?.length > 0 && (
                     <div className="mt-3 pt-3 border-t border-border space-y-1.5">
-                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Timeline</p>
-                      {app.histories.map(h => (
-                        <div key={h.id} className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                        Timeline
+                      </p>
+                      {app.histories.map((h) => (
+                        <div
+                          key={h.id}
+                          className="flex items-center gap-2 text-xs text-muted-foreground"
+                        >
                           <Clock className="w-3 h-3 shrink-0" />
                           <span>{h.fromStatus}</span>
                           <ArrowRight className="w-3 h-3" />
-                          <span className="font-medium text-foreground">{h.toStatus}</span>
+                          <span className="font-medium text-foreground">
+                            {h.toStatus}
+                          </span>
                           {h.note && <span>· {h.note}</span>}
-                          <span className="ml-auto">{new Date(h.changedAt).toLocaleDateString()}</span>
+                          <span className="ml-auto">
+                            {new Date(h.changedAt).toISOString().split("T")[0]}
+                          </span>
                         </div>
                       ))}
                     </div>
