@@ -14,6 +14,7 @@ import CandidateProfilePage from "./pages/CandidateProfilePage";
 import EmployerJobsPage from "./pages/employer/EmployerJobsPage";
 import EmployerApplicationsPage from "./pages/employer/EmployerApplicationsPage";
 import EmployerProfilePage from "./pages/employer/EmployerProfilePage";
+import EmployerInterviewsPage from "./pages/employer/EmployerInterviewsPage";
 import AdminPendingJobsPage from "./pages/admin/AdminPendingJobsPage";
 import AdminCategoriesPage from "./pages/admin/AdminCategoriesPage";
 import AdminUsersPage from "./pages/admin/AdminUsersPage";
