@@ -31,6 +31,7 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
       ? [
           { to: "/employer/jobs", icon: Briefcase, label: "My Jobs" },
           { to: "/employer/applications", icon: FolderOpen, label: "Applications" },
+          { to: "/employer/interviews", icon: CalendarIcon, label: "Interviews" },
           { to: "/employer/profile", icon: User, label: "Profile" },
           { to: "/notifications", icon: Bell, label: "Notifications" },
         ]

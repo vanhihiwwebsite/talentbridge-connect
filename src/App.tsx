@@ -39,6 +39,7 @@ const App = () => (
               <Route path="/candidate/profile" element={<ProtectedRoute allowedRoles={["CANDIDATE"]}><CandidateProfilePage /></ProtectedRoute>} />
               <Route path="/employer/jobs" element={<ProtectedRoute allowedRoles={["EMPLOYER"]}><EmployerJobsPage /></ProtectedRoute>} />
               <Route path="/employer/applications" element={<ProtectedRoute allowedRoles={["EMPLOYER"]}><EmployerApplicationsPage /></ProtectedRoute>} />
+              <Route path="/employer/interviews" element={<ProtectedRoute allowedRoles={["EMPLOYER"]}><EmployerInterviewsPage /></ProtectedRoute>} />
               <Route path="/employer/profile" element={<ProtectedRoute allowedRoles={["EMPLOYER"]}><EmployerProfilePage /></ProtectedRoute>} />
               <Route path="/admin/jobs" element={<ProtectedRoute allowedRoles={["ADMIN"]}><AdminPendingJobsPage /></ProtectedRoute>} />
               <Route path="/admin/categories" element={<ProtectedRoute allowedRoles={["ADMIN"]}><AdminCategoriesPage /></ProtectedRoute>} />
