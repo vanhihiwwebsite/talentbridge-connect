@@ -1,7 +1,7 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import { LogOut, Bell, Briefcase, User, Shield, FolderOpen, Users, Search, Menu, X, Home } from "lucide-react";
+import { LogOut, Bell, Briefcase, User, Shield, FolderOpen, Users, Search, Menu, X, Home, CalendarIcon } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
@@ -31,6 +31,7 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
       ? [
           { to: "/employer/jobs", icon: Briefcase, label: "My Jobs" },
           { to: "/employer/applications", icon: FolderOpen, label: "Applications" },
+          { to: "/employer/interviews", icon: CalendarIcon, label: "Interviews" },
           { to: "/employer/profile", icon: User, label: "Profile" },
           { to: "/notifications", icon: Bell, label: "Notifications" },
         ]
