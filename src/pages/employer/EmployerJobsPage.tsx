@@ -332,8 +332,8 @@ const EmployerJobsPage = () => {
                           <MapPin className="w-3.5 h-3.5" />
                           {job.location}
                         </span>
-                        <span>{job.jobType}</span>
-                        <span>{job.experienceLevel}</span>
+                        <span>{enumToDisplay(job.jobType)}</span>
+                        <span>{enumToDisplay(job.experienceLevel)}</span>
                         {job.expiredAt && (
                           <span>Expires: {formatDateYMD(job.expiredAt)}</span>
                         )}
