@@ -49,8 +49,10 @@ const App = () => (
               <Route path="/admin/users" element={<ProtectedRoute allowedRoles={["ADMIN"]}><AdminUsersPage /></ProtectedRoute>} />
               <Route path="/notifications" element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />
               <Route path="/chat" element={<ProtectedRoute allowedRoles={["CANDIDATE", "EMPLOYER"]}><ChatPage /></ProtectedRoute>} />
+              <Route path="/ai-assistant" element={<ProtectedRoute allowedRoles={["CANDIDATE", "EMPLOYER"]}><AiAssistantPage /></ProtectedRoute>} />
               <Route path="*" element={<NotFound />} />
             </Routes>
+            <FloatingAiButton />
           </AppLayout>
         </AuthProvider>
       </BrowserRouter>
