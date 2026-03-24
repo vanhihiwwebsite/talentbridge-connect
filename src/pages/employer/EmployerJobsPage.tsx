@@ -48,7 +48,7 @@ const EmployerJobsPage = () => {
     salaryMax: 0,
     location: "",
     jobType: "FULL_TIME",
-    experienceLevel: "ENTRY",
+    experienceLevel: "INTERN",
     categoryId: 0,
     expiredAt: formatDateYMD(new Date()),
     skills: [],
