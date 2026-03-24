@@ -67,7 +67,7 @@ const ApplicationCard = ({ app, queryClient }: { app: ApplicationResponse; query
             <CardTitle className="text-base font-semibold">{app.candidateName}</CardTitle>
             <p className="text-sm text-muted-foreground">{app.candidateEmail} · {app.jobTitle}</p>
           </div>
-          <Badge variant="outline" className={statusStyles[app.status] || ""}>{app.status}</Badge>
+          <Badge variant="outline" className={applicationStatusStyles[app.status] || ""}>{enumToDisplay(app.status)}</Badge>
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
