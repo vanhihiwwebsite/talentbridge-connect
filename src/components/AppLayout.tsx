@@ -29,13 +29,14 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
            { to: "/notifications", icon: Bell, label: "Notifications" },
          ]
       : role === "EMPLOYER"
-      ? [
-          { to: "/employer/jobs", icon: Briefcase, label: "My Jobs" },
-          { to: "/employer/applications", icon: FolderOpen, label: "Applications" },
-          { to: "/employer/interviews", icon: CalendarIcon, label: "Interviews" },
-          { to: "/employer/profile", icon: User, label: "Profile" },
-          { to: "/notifications", icon: Bell, label: "Notifications" },
-        ]
+       ? [
+           { to: "/employer/jobs", icon: Briefcase, label: "My Jobs" },
+           { to: "/employer/applications", icon: FolderOpen, label: "Applications" },
+           { to: "/employer/interviews", icon: CalendarIcon, label: "Interviews" },
+           { to: "/chat", icon: MessageSquare, label: "Messages" },
+           { to: "/employer/profile", icon: User, label: "Profile" },
+           { to: "/notifications", icon: Bell, label: "Notifications" },
+         ]
       : role === "ADMIN"
       ? [
           { to: "/admin/jobs", icon: Shield, label: "Pending Jobs" },
