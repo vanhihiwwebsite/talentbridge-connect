@@ -342,10 +342,9 @@ const EmployerJobsPage = () => {
                     <div className="flex items-center gap-2">
                       <Badge
                         variant="outline"
-                        className={statusStyles[job.status] || ""}
+                        className={jobStatusStyles[job.status] || ""}
                       >
-                        {" "}
-                        {job.status}
+                        {enumToDisplay(job.status)}
                       </Badge>
                       <Badge variant="secondary" className="gap-1">
                         <Users className="w-3 h-3" />
