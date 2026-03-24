@@ -167,9 +167,9 @@ const EmployerInterviewsPage = () => {
                     </div>
                     <Badge
                       variant="outline"
-                      className={statusStyles[interview.status] || ""}
+                      className={interviewStatusStyles[interview.status] || ""}
                     >
-                      {interview.status}
+                      {enumToDisplay(interview.status)}
                     </Badge>
                   </div>
                 </CardHeader>

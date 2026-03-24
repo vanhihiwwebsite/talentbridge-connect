@@ -83,11 +83,9 @@ const ApplicationCard = ({ app, queryClient }: { app: ApplicationResponse; query
             <Select value={status} onValueChange={setStatus}>
               <SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="PENDING">Pending</SelectItem>
-                <SelectItem value="REVIEWING">Reviewing</SelectItem>
-                <SelectItem value="INTERVIEW">Interview</SelectItem>
-                <SelectItem value="ACCEPTED">Accepted</SelectItem>
-                <SelectItem value="REJECTED">Rejected</SelectItem>
+                {APPLICATION_STATUSES.map(s => (
+                  <SelectItem key={s} value={s}>{enumToDisplay(s)}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>

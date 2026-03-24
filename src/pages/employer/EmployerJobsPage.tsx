@@ -220,11 +220,9 @@ const EmployerJobsPage = () => {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="FULL_TIME">Full Time</SelectItem>
-                        <SelectItem value="PART_TIME">Part Time</SelectItem>
-                        <SelectItem value="CONTRACT">Contract</SelectItem>
-                        <SelectItem value="INTERNSHIP">Internship</SelectItem>
-                        <SelectItem value="REMOTE">Remote</SelectItem>
+                        {JOB_TYPES.map(jt => (
+                          <SelectItem key={jt} value={jt}>{enumToDisplay(jt)}</SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>
