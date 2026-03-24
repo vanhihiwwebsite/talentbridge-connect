@@ -77,8 +77,22 @@ const AiAssistantPage = () => {
         message: trimmed,
         history: messages.map(m => ({ role: m.role, content: m.content })),
       });
-      const reply = res.data?.data || res.data?.message || res.data;
-      const content = typeof reply === "string" ? reply : reply?.content || reply?.reply || JSON.stringify(reply);
+      const raw = res.data?.data || res.data?.message || res.data;
+      let content: string;
+      if (typeof raw === "string") {
+        try {
+          const parsed = JSON.parse(raw);
+          content = parsed?.answer || raw;
+        } catch {
+          content = raw;
+        }
+      } else if (typeof raw === "object" && raw !== null) {
+        content = raw.answer || raw.content || raw.reply || JSON.stringify(raw);
+      } else {
+        content = String(raw);
+      }
+      // Normalize escaped newlines into real line breaks
+      content = content.replace(/\\n/g, "\n");
       setMessages([...updatedMessages, { role: "assistant", content }]);
     } catch (err: any) {
       const errorMsg = err.response?.data?.message || "Failed to get AI response. Please try again.";

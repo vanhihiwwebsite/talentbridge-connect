@@ -35,12 +35,7 @@ import PageTransition from "@/components/PageTransition";
 import SkeletonCard from "@/components/SkeletonCard";
 import EmptyState from "@/components/EmptyState";
 
-const statusStyles: Record<string, string> = {
-  APPROVED: "bg-success/10 text-success border-success/20",
-  PENDING: "bg-warning/10 text-warning border-warning/20",
-  REJECTED: "bg-destructive/10 text-destructive border-destructive/20",
-  CLOSED: "bg-muted text-muted-foreground border-border",
-};
+import { EXPERIENCE_LEVELS, JOB_TYPES, jobStatusStyles, enumToDisplay } from "@/lib/enums";
 
 const EmployerJobsPage = () => {
   const queryClient = useQueryClient();

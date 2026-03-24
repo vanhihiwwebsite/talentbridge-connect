@@ -14,13 +14,7 @@ import PageTransition from "@/components/PageTransition";
 import SkeletonCard from "@/components/SkeletonCard";
 import EmptyState from "@/components/EmptyState";
 
-const statusStyles: Record<string, string> = {
-  PENDING: "bg-warning/10 text-warning border-warning/20",
-  REVIEWING: "bg-info/10 text-info border-info/20",
-  INTERVIEW: "bg-primary/10 text-primary border-primary/20",
-  ACCEPTED: "bg-success/10 text-success border-success/20",
-  REJECTED: "bg-destructive/10 text-destructive border-destructive/20",
-};
+import { APPLICATION_STATUSES, applicationStatusStyles, enumToDisplay } from "@/lib/enums";
 
 const EmployerApplicationsPage = () => {
   const queryClient = useQueryClient();
