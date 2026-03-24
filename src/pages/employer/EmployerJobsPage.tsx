@@ -240,11 +240,9 @@ const EmployerJobsPage = () => {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="ENTRY">Entry</SelectItem>
-                        <SelectItem value="JUNIOR">Junior</SelectItem>
-                        <SelectItem value="MID">Mid</SelectItem>
-                        <SelectItem value="SENIOR">Senior</SelectItem>
-                        <SelectItem value="LEAD">Lead</SelectItem>
+                        {EXPERIENCE_LEVELS.map(level => (
+                          <SelectItem key={level} value={level}>{enumToDisplay(level)}</SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>
