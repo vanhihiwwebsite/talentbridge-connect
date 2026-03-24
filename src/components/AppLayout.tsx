@@ -1,7 +1,7 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import { LogOut, Bell, Briefcase, User, Shield, FolderOpen, Users, Search, Menu, X, Home, CalendarIcon } from "lucide-react";
+import { LogOut, Bell, Briefcase, User, Shield, FolderOpen, Users, Search, Menu, X, Home, CalendarIcon, MessageSquare } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
