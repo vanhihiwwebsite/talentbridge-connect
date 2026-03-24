@@ -20,6 +20,8 @@ import AdminCategoriesPage from "./pages/admin/AdminCategoriesPage";
 import AdminUsersPage from "./pages/admin/AdminUsersPage";
 import NotificationsPage from "./pages/NotificationsPage";
 import ChatPage from "./pages/ChatPage";
+import AiAssistantPage from "./pages/AiAssistantPage";
+import FloatingAiButton from "./components/FloatingAiButton";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
