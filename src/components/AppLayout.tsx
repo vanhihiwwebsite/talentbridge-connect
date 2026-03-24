@@ -21,12 +21,13 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
 
   const navItems = isAuthenticated
     ? role === "CANDIDATE"
-      ? [
-          { to: "/jobs", icon: Search, label: "Browse Jobs" },
-          { to: "/my-applications", icon: FolderOpen, label: "My Applications" },
-          { to: "/candidate/profile", icon: User, label: "Profile" },
-          { to: "/notifications", icon: Bell, label: "Notifications" },
-        ]
+       ? [
+           { to: "/jobs", icon: Search, label: "Browse Jobs" },
+           { to: "/my-applications", icon: FolderOpen, label: "My Applications" },
+           { to: "/chat", icon: MessageSquare, label: "Messages" },
+           { to: "/candidate/profile", icon: User, label: "Profile" },
+           { to: "/notifications", icon: Bell, label: "Notifications" },
+         ]
       : role === "EMPLOYER"
       ? [
           { to: "/employer/jobs", icon: Briefcase, label: "My Jobs" },
